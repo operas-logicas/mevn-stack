@@ -1,0 +1,19 @@
+* {
+  color: #fff;
+}
+
+.custom-bg-dark {
+  background-color: #373f46;
+}
+
+.btn-primary {
+  background-color: #32aced !important;
+}
+
+.btn-success {
+  background-color: #4fc08d !important;
+}
+
+.btn-success:hover {
+  background-color: #3da978 !important;
+}

@@ -19,6 +19,10 @@ export default {
   components: {
     Navbar,
     Footer
+  },
+
+  beforeCreate: async function() {
+    await this.$store.dispatch('authenticate')
   }
 }
 </script>

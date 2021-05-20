@@ -9,6 +9,8 @@ import TasksEdit from '../views/tasks/TasksEdit.vue'
 
 Vue.use(VueRouter)
 
+const isLoggedIn = false
+
 const routes = [
   {
     path: '/',
@@ -18,27 +20,47 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    component: Login
+    component: Login,
+    beforeEnter: (to, from, next) => {
+      if (isLoggedIn) next({ name: 'home' })
+      next()
+    }
   },
   {
     path: '/register',
     name: 'register',
-    component: Register
+    component: Register,
+    beforeEnter: (to, from, next) => {
+      if (isLoggedIn) next({ name: 'home' })
+      next()
+    }
   },
   {
     path: '/tasks',
     name: 'tasks-all',
-    component: TasksAll
+    component: TasksAll,
+    beforeEnter: (to, from, next) => {
+      if (!isLoggedIn) next({ name: 'login' })
+      next()
+    }
   },
   {
     path: '/tasks/new',
     name: 'tasks-create',
-    component: TasksCreate
+    component: TasksCreate,
+    beforeEnter: (to, from, next) => {
+      if (!isLoggedIn) next({ name: 'login' })
+      next()
+    }
   },
   {
     path: '/tasks/:id',
     name: 'tasks-edit',
-    component: TasksEdit
+    component: TasksEdit,
+    beforeEnter: (to, from, next) => {
+      if (!isLoggedIn) next({ name: 'login' })
+      next()
+    }
   },
   {
     path: '*',

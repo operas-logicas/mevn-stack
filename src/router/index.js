@@ -11,6 +11,20 @@ Vue.use(VueRouter)
 
 const isLoggedIn = false
 
+const ifLoggedInRedirectTo = function(route) {
+  return (to, from, next) => {
+    if (isLoggedIn) next({ name: route })
+    next()
+  }
+}
+
+const ifNotLoggedInRedirectTo = function(route) {
+  return (to, from, next) => {
+    if (!isLoggedIn) next({ name: route })
+    next()
+  }
+}
+
 const routes = [
   {
     path: '/',
@@ -21,46 +35,31 @@ const routes = [
     path: '/login',
     name: 'login',
     component: Login,
-    beforeEnter: (to, from, next) => {
-      if (isLoggedIn) next({ name: 'home' })
-      next()
-    }
+    beforeEnter: ifLoggedInRedirectTo('home')
   },
   {
     path: '/register',
     name: 'register',
     component: Register,
-    beforeEnter: (to, from, next) => {
-      if (isLoggedIn) next({ name: 'home' })
-      next()
-    }
+    beforeEnter: ifLoggedInRedirectTo('home')
   },
   {
     path: '/tasks',
     name: 'tasks-all',
     component: TasksAll,
-    beforeEnter: (to, from, next) => {
-      if (!isLoggedIn) next({ name: 'login' })
-      next()
-    }
+    beforeEnter: ifNotLoggedInRedirectTo('login')
   },
   {
     path: '/tasks/new',
     name: 'tasks-create',
     component: TasksCreate,
-    beforeEnter: (to, from, next) => {
-      if (!isLoggedIn) next({ name: 'login' })
-      next()
-    }
+    beforeEnter: ifNotLoggedInRedirectTo('login')
   },
   {
     path: '/tasks/:id',
     name: 'tasks-edit',
     component: TasksEdit,
-    beforeEnter: (to, from, next) => {
-      if (!isLoggedIn) next({ name: 'login' })
-      next()
-    }
+    beforeEnter: ifNotLoggedInRedirectTo('login')
   },
   {
     path: '*',

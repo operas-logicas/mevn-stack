@@ -17,7 +17,7 @@ export default {
     try {
       const res = await fetch(this.$store.state.apiUrl + '/api/users')
       console.log(res)
-    } catch(err) {
+    } catch (err) {
       console.log(err)
     }
   }

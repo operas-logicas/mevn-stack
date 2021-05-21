@@ -1,11 +1,13 @@
 const express = require('express')
+const connectToMongoDB = require('./config/db')
 const setEnvironment = require('./config/env')
 const registerRoutes = require('./routes')
 
 const app = express()
 
-// Route middleware
+// Initialization
 setEnvironment(app)
+connectToMongoDB()
 registerRoutes(app)
 
 app.get('/', (req, res) => {

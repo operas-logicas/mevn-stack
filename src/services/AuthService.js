@@ -1,7 +1,7 @@
 import store from '../store'
 
 class AuthService {
-  async _setToken(token) {
+  async #setToken(token) {
     localStorage.setItem('token', JSON.stringify(token))
     await store.dispatch('authenticate') 
   }
@@ -22,7 +22,7 @@ class AuthService {
     const token = {
       username: 'robert'
     }
-    this._setToken(token)
+    this.#setToken(token)
   }
 }
 

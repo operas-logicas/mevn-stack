@@ -1,3 +1,4 @@
+const User = require('../models/User')
 const StringUtil = require('../utilities/StringUtil')
 
 class AuthController {
@@ -17,15 +18,19 @@ class AuthController {
   }
   
   // Login new user
-  login(req, res) {
+  async login(req, res) {
     const validation = this.#validateLogin(req.body)
     if (!validation.isValid)
       return res.status(400).json({ message: validation.message })
   
-    const user = {
-      username: req.body.username,
-      password: req.body.password
-    }
+    const user = await User.findOne({
+      username: req.body.username.toLowerCase()
+    })
+    if (!user) return res.status(401).json({ error: 'Invalid credentials!' })
+
+    // TODO: Password validation
+    const passwordsMatch = true
+    if (!passwordsMatch) res.status(401).json({ error: 'Invalid credentials!' })
   
     return res.status(204).json()
   }

@@ -1,7 +1,12 @@
 const mongoose = require('mongoose')
 
 const taskSchema = new mongoose.Schema({
-  title: String,
+  title: {
+    type: String,
+    required: true,
+    minLength: 3,
+    maxLength: 255
+  },
   
   body: String,
 

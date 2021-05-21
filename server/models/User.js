@@ -2,10 +2,33 @@ const mongoose = require('mongoose')
 const StringUtil = require('../utilities/StringUtil')
 
 const userSchema = new mongoose.Schema({
-  username: String,
-  firstName: String,
-  lastName: String,
-  password: String
+  username: {
+    type: String,
+    required: true,
+    minLength: 5,
+    maxLength: 50,
+    unique: true
+  },
+
+  firstName: {
+    type: String,
+    required: true,
+    minLength: 3,
+    maxLength: 100
+  },
+
+  lastName: {
+    type: String,
+    required: true,
+    minLength: 3,
+    maxLength: 100
+  },
+
+  password: {
+    type: String,
+    required: true,
+    length: 60
+  }
 })
 
 userSchema.set('timestamps', true)

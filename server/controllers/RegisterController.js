@@ -1,3 +1,4 @@
+const User = require('../models/User')
 const StringUtil = require('../utilities/StringUtil')
 
 class RegisterController {
@@ -17,17 +18,26 @@ class RegisterController {
   }
   
   // Register new user
-  register(req, res) {
+  async register(req, res) {
     const validation = this.#validateRegister(req.body)
     if (!validation.isValid)
       return res.status(400).json({ message: validation.message })
   
-    const user = {
-      username: req.body.username,
-      password: req.body.password
+    try {
+      const user = new User({
+        username: req.body.username,
+        password: req.body.password
+      })
+  
+      await user.save()
+      return res.status(201).json(user)
+
+    } catch (error) {
+      if (error.code === 11000)
+        return res.status(400).json({ error: 'Username already taken!' })
+      
+      return res.status(500).json('Something went wrong!')
     }
-    console.log(user)
-    return res.status(201).json()
   }
 }
 

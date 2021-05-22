@@ -1,13 +1,38 @@
+const User = require('../models/User')
+
 class UserController {
   // Find all users
-  index(req, res) {
-    return res.status(200).json({ message: 'users.index' })
+  async index(req, res) {
+    try {
+      const users = await User
+        .find()
+        .sort('username')
+        .select('-password')
+
+      return res.status(200).json({ users })
+
+    } catch (error) {
+      return res.status(500).json({ error: error.message })
+    }
   }
   
   // Find user by id
-  show(req, res) {
-    return res.status(200).json({ message: 'users.show'})
+  async show(req, res) {
+    try {
+      const user = await User.findById(req.params.id)
+      if (!user) return res.status(404).json({ error: 'User not found!' })
+
+      return res.status(200).json({
+        _id: user._id,
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName
+      })
+
+    } catch (error) {
+      return res.status(500).json({ error: error.message })
+    }
   }
 }
 
-module.exports = new UserController
+module.exports = new UserController()

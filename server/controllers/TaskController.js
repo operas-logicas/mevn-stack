@@ -8,10 +8,10 @@ class TaskController {
   async index(req, res) {
     try {
       const tasks = await Task
-        .find({})
-        .sort('dueDate')
+        .find()
+        .sort('-updatedAt')
         .populate('author', 'username')
-        .select('title body dueDate completed author')
+        .select('-__v')
 
       return res.status(200).json({ tasks })
 
@@ -94,7 +94,7 @@ class TaskController {
     try {
       const user = await User.findById(userId)
       if (!user) return res.status(400).json({ error: 'Invalid user!' })
-      
+
       const task = await Task.findById(req.params.id)
       if (!task) return res.status(404).json({ error: 'Task Not Found!' })
 
@@ -110,4 +110,4 @@ class TaskController {
   }
 }
 
-module.exports = new TaskController
+module.exports = new TaskController()

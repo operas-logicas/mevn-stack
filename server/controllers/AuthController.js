@@ -2,7 +2,7 @@ const User = require('../models/User')
 const StringUtil = require('../utilities/StringUtil')
 
 class AuthController {
-  #validateLogin(body) {
+  _validateLogin(body) {
     let errors = ''
   
     if (StringUtil.isEmpty(body.username))
@@ -19,7 +19,7 @@ class AuthController {
   
   // Login new user
   async login(req, res) {
-    const validation = this.#validateLogin(req.body)
+    const validation = this._validateLogin(req.body)
     if (!validation.isValid)
       return res.status(400).json({ message: validation.message })
   
@@ -36,4 +36,4 @@ class AuthController {
   }
 }
 
-module.exports = new AuthController
+module.exports = new AuthController()

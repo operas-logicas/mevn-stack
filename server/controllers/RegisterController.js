@@ -1,31 +1,17 @@
 const User = require('../models/User')
-const StringUtil = require('../utilities/StringUtil')
 
 class RegisterController {
-  _validateRegister(body) {
-    let errors = ''
-  
-    if (StringUtil.isEmpty(body.username))
-      errors += 'Username is required. '
-  
-    if (StringUtil.isEmpty(body.password))
-      errors += 'Password is required. '
-  
-    return {
-      isValid: StringUtil.isEmpty(errors),
-      message: errors
-    }
-  }
-  
   // Register new user
   async register(req, res) {
-    const validation = this._validateRegister(req.body)
+    const validation = User.validateRequest(req.body)
     if (!validation.isValid)
       return res.status(400).json({ error: validation.message })
       
     try {
       const user = new User({
         username: req.body.username,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
         password: req.body.password
       })
   

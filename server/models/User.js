@@ -31,17 +31,32 @@ const userSchema = new mongoose.Schema({
 
 userSchema.set('timestamps', true)
 
-userSchema.virtual('fullName').get(() => {
-  const first = StringUtil.capitalize(this.firstName)
-  const last = StringUtil.capitalize(this.lastName)
-  return `${first} ${last}`
-})
+userSchema.statics.validateRequest = body => {
+  let errors = ''
 
-userSchema.pre('save', next => {
+  if (StringUtil.isEmpty(body.username))
+    errors += 'Username is required. '
+
+  if (StringUtil.isEmpty(body.password))
+    errors += 'Password is required. '
+
+  return {
+    isValid: StringUtil.isEmpty(errors),
+    message: errors
+  }
+}
+
+userSchema.pre('save', function(next) {
   this.username = this.username.toLowerCase()
   this.firstName = this.firstName.toLowerCase()
   this.lastName = this.lastName.toLowerCase()
   next()
+})
+
+userSchema.virtual('fullName').get(function() {
+  const first = StringUtil.capitalize(this.firstName)
+  const last = StringUtil.capitalize(this.lastName)
+  return `${first} ${last}`
 })
 
 module.exports = mongoose.model('User', userSchema)

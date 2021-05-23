@@ -7,7 +7,7 @@ class UserController {
       const users = await User
         .find()
         .sort('username')
-        .select('-password')
+        .select('-password -__v')
 
       return res.status(200).json({ users })
 
@@ -26,7 +26,9 @@ class UserController {
         _id: user._id,
         username: user.username,
         firstName: user.firstName,
-        lastName: user.lastName
+        lastName: user.lastName,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
       })
 
     } catch (error) {

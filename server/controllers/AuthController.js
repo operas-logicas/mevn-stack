@@ -1,25 +1,9 @@
 const User = require('../models/User')
-const StringUtil = require('../utilities/StringUtil')
 
-class AuthController {
-  _validateLogin(body) {
-    let errors = ''
-  
-    if (StringUtil.isEmpty(body.username))
-      errors += 'Username is required. '
-  
-    if (StringUtil.isEmpty(body.password))
-      errors += 'Password is required. '
-  
-    return {
-      isValid: StringUtil.isEmpty(errors),
-      message: errors
-    }
-  }
-  
+class AuthController {  
   // Login new user
   async login(req, res) {
-    const validation = this._validateLogin(req.body)
+    const validation = User.validateRequest(req.body)
     if (!validation.isValid)
       return res.status(400).json({ message: validation.message })
   

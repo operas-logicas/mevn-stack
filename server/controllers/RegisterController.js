@@ -1,4 +1,5 @@
 const User = require('../models/User')
+const _ = require('lodash')
 
 class RegisterController {
   // Register new user
@@ -16,7 +17,9 @@ class RegisterController {
       })
   
       await user.save()
-      return res.status(201).json(user)
+      return res.status(201).json(
+        _.pick(user, ['_id', 'username', 'firstName', 'lastName'])
+      )
 
     } catch (error) {
       if (error.code === 11000)

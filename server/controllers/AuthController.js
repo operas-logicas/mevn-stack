@@ -3,7 +3,7 @@ const User = require('../models/User')
 class AuthController {  
   // Login new user
   async login(req, res) {
-    const validation = User.validateRequest(req.body)
+    const validation = User.validateRequest(req.body, false)
     if (!validation.isValid)
       return res.status(400).json({ message: validation.message })
   
@@ -12,8 +12,9 @@ class AuthController {
     })
     if (!user) return res.status(401).json({ error: 'Invalid credentials!' })
 
-    // TODO: Password validation
-    const passwordsMatch = true
+    const passwordsMatch = await User.validatePassword(
+      req.body.password, user.password
+    )
     if (!passwordsMatch) res.status(401).json({ error: 'Invalid credentials!' })
   
     return res.status(204).json()

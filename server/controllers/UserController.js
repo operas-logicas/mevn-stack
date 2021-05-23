@@ -1,4 +1,5 @@
 const User = require('../models/User')
+const _ = require('lodash')
 
 class UserController {
   // Find all users
@@ -22,14 +23,9 @@ class UserController {
       const user = await User.findById(req.params.id)
       if (!user) return res.status(404).json({ error: 'User not found!' })
 
-      return res.status(200).json({
-        _id: user._id,
-        username: user.username,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt
-      })
+      return res.status(200).json(
+        _.pick(user, ['_id', 'username', 'firstName', 'lastName'])
+      )
 
     } catch (error) {
       return res.status(500).json({ error: error.message })

@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const StringUtil = require('../utilities/StringUtil')
 
@@ -12,12 +13,14 @@ const userSchema = new mongoose.Schema({
 
   firstName: {
     type: String,
+    required: true,
     minLength: 3,
     maxLength: 100
   },
 
   lastName: {
     type: String,
+    required: true,
     minLength: 3,
     maxLength: 100
   },
@@ -31,25 +34,45 @@ const userSchema = new mongoose.Schema({
 
 userSchema.set('timestamps', true)
 
-userSchema.statics.validateRequest = body => {
-  let errors = ''
+// Validate the request ahead of mongoose
+userSchema.statics.validateRequest =
+  (body, register = true) => {
+    let errors = ''
 
-  if (StringUtil.isEmpty(body.username))
-    errors += 'Username is required. '
+    if (StringUtil.isEmpty(body.username))
+      errors += 'Username is required. '
 
-  if (StringUtil.isEmpty(body.password))
-    errors += 'Password is required. '
+    if (StringUtil.isEmpty(body.password))
+      errors += 'Password is required. '
 
-  return {
-    isValid: StringUtil.isEmpty(errors),
-    message: errors
-  }
+    if (register) {
+      if (StringUtil.isEmpty(body.firstName))
+        errors += 'First name is required. '
+
+      if (StringUtil.isEmpty(body.lastName))
+        errors += 'Last name is required. '
+    }
+
+    return {
+      isValid: StringUtil.isEmpty(errors),
+      message: errors
+    }
 }
 
-userSchema.pre('save', function(next) {
+// Validate password
+userSchema.statics.validatePassword = (plain, hashed) => {
+  return bcrypt.compare(plain, hashed)
+}
+
+userSchema.pre('save', async function(next) {
   this.username = this.username.toLowerCase()
   this.firstName = this.firstName.toLowerCase()
   this.lastName = this.lastName.toLowerCase()
+  
+  // Hash password
+  const salt = await bcrypt.genSalt()
+  this.password = await bcrypt.hash(this.password, salt)
+
   next()
 })
 

@@ -1,18 +1,36 @@
-import { http } from './HttpService'
+import jwt from 'jsonwebtoken'
+import http from './HttpService'
 import store from '../store'
 
 class AuthService {
+  _decodeToken() {
+    const token = this.getToken()
+    if (!token) return null
+
+    return jwt.decode(token)
+  }
+
   async _setToken(token) {
     localStorage.setItem('token', token)
     await store.dispatch('authenticate') 
   }
+
+  getToken() {
+    return localStorage.getItem('token')
+  }
   
   getUsername() {
-    return 'robert'
+    const user = this._decodeToken()
+    if (!user) return null
+
+    return user.username
   }
 
   getUserId() {
-    return 1
+    const user = this._decodeToken()
+    if (!user) return null
+
+    return user.id
   }
   
   isLoggedIn() {

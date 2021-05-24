@@ -6,6 +6,7 @@ function setDevEnv(app) {
   // Set environment vars
   process.env.NODE_ENV = 'development'
   process.env.DB_URL = 'mongodb://localhost:27017/mevn-stack'
+  process.env.JWT_PRIVATE_KEY = 'mySuperSecretKey'
 
   // Register middleware
   app.use(express.json())
@@ -14,9 +15,16 @@ function setDevEnv(app) {
 }
 
 function setProdEnv(app) {
-  // Set environment vars
-  if (!process.env.DB_URL)
-    process.env.DB_URL = 'mongodb://localhost:27017/mevn-stack'
+  // Check for environment vars
+  if (!process.env.DB_URL) {
+    console.error('DB_URL is undefined!')
+    process.exit(1)
+  }
+  
+  if (!process.env.JWT_PRIVATE_KEY) {
+    console.error('JWT_PRIVATE_KEY is undefined!')
+    process.exit(1)
+  }
 
   // Register middleware
   app.use(express.json())

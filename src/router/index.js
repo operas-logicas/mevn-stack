@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import auth from '../services/AuthService'
 import Home from '../views/Home.vue'
 import Login from '../views/authentication/Login.vue'
 import Register from '../views/authentication/Register.vue'
@@ -9,18 +10,16 @@ import TasksEdit from '../views/tasks/TasksEdit.vue'
 
 Vue.use(VueRouter)
 
-const isLoggedIn = false
-
 const ifLoggedInRedirectTo = function(route) {
   return (to, from, next) => {
-    if (isLoggedIn) next({ name: route })
+    if (auth.isLoggedIn()) next({ name: route })
     next()
   }
 }
 
 const ifNotLoggedInRedirectTo = function(route) {
   return (to, from, next) => {
-    if (!isLoggedIn) next({ name: route })
+    if (!auth.isLoggedIn()) next({ name: route })
     next()
   }
 }

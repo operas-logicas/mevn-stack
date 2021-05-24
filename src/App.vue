@@ -21,7 +21,7 @@ export default {
     Footer
   },
 
-  beforeCreate: async function() {
+  async beforeCreate() {
     await this.$store.dispatch('authenticate')
   }
 }

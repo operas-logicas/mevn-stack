@@ -20,7 +20,7 @@
             >Home</router-link>
           </li>
 
-          <li class="nav-item">
+          <li v-if="isLoggedIn" class="nav-item">
             <router-link
               :to="{ name: 'tasks-all' }"
               class="nav-link"
@@ -28,7 +28,7 @@
             >Tasks</router-link>
           </li>
 
-          <li class="nav-item">
+          <li v-if="!isLoggedIn" class="nav-item">
             <router-link
               :to="{ name: 'register' }"
               class="nav-link"
@@ -36,7 +36,7 @@
             >Register</router-link>
           </li>
 
-          <li class="nav-item">
+          <li v-if="!isLoggedIn" class="nav-item">
             <router-link
               :to="{ name: 'login' }"
               class="nav-link"
@@ -44,24 +44,47 @@
             >Login</router-link>
           </li>
 
-          <li class="nav-item">
-            <a class="nav-link" href="#">Logout</a>
+          <li v-if="isLoggedIn" class="nav-item">
+            <a @click.prevent="logout" class="nav-link" href="#">Logout</a>
           </li>
 
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              {{
-                this.$store.state.username
-                ? this.$store.state.username
-                : 'User'
-              }}
-            </a>
+          <li v-if="isLoggedIn" class="nav-item">
+            <a class="nav-link" href="#">{{ username }}</a>
           </li>
         </ul>
       </div>
     </nav>
   </header>
 </template>
+
+<script>
+import auth from '../services/AuthService'
+
+export default {
+  name: 'Navbar',
+
+  computed: {
+    isLoggedIn() {
+      return this.$store.state.isLoggedIn
+    },
+
+    username() {
+      return this.$store.state.username
+        ? this.$store.state.username
+        : 'User'
+    }
+  },
+
+  methods: {
+    async logout() {
+      await auth.logout()
+
+      if(this.$route.name !== 'home')
+        this.$router.push({ name: 'home' })
+    }
+  }
+}
+</script>
 
 <style scoped>
 .navbar {

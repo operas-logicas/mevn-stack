@@ -8,7 +8,7 @@
         <input
           type="text"
           class="form-control"
-          id="username"
+          v-model="username"
         >
       </div>
 
@@ -17,11 +17,11 @@
         <input
           type="password"
           class="form-control"
-          id="password"
+          v-model="password"
         >
       </div>
 
-      <button type="submit" class="btn btn-secondary">Submit</button>
+      <button type="submit" class="btn btn-secondary">Login</button>
     </form>
   </div>  
 </template>
@@ -30,11 +30,30 @@
 import auth from '../../services/AuthService'
 
 export default {
-  name: 'login',
+  name: 'Login',
+
+  data() {
+    return {
+      username: null,
+      password: null
+    }
+  },
 
   methods: {
-    onSubmit: function() {
-      auth.login()
+    async onSubmit() {
+      try {
+        const user = {
+          username: this.username,
+          password: this.password
+        }
+
+        // Login user
+        await auth.login(user)
+      } catch (error) {
+        console.log(error)
+      }
+
+      // Redirect to home
       this.$router.push({ name: 'home' })
     }
   }

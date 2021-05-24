@@ -1,8 +1,9 @@
+import { http } from './HttpService'
 import store from '../store'
 
 class AuthService {
-  async #setToken(token) {
-    localStorage.setItem('token', JSON.stringify(token))
+  async _setToken(token) {
+    localStorage.setItem('token', token)
     await store.dispatch('authenticate') 
   }
   
@@ -18,12 +19,27 @@ class AuthService {
     return localStorage.getItem('token') !== null
   }
   
-  login() {
-    const token = {
-      username: 'robert'
+  async login(user) {
+    try {
+      const token = (await http().post('/auth', user)).data.token
+      this._setToken(token)
+    } catch (error) {
+      console.log(error)
     }
-    this.#setToken(token)
+  }
+
+  async logout() {
+    localStorage.clear()
+    await store.dispatch('authenticate')
+  }
+
+  async register(user) {
+    try {
+      return await http().post('/register', user)
+    } catch (error) {
+      console.log(error)
+    }
   }
 }
 
-export default new AuthService
+export default new AuthService()

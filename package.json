@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
     "build": "export NODE_ENV=production && vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "dev": "concurrently \"export NODE_ENV=development && nodemon server/index.js\" \"npm run serve\" "
+    "dev": "concurrently \"export NODE_ENV=development && nodemon server/index.js\" \"npm run serve\" ",
+    "serve": "vue-cli-service serve",
+    "start": "export NODE_ENV=production && node server/index.js"
   },
   "dependencies": {
     "axios": "^0.21.1",

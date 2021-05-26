@@ -63,7 +63,7 @@ export default {
         // Create task
         await taskService.createTask({ task: this.task })
 
-        // Redirect to home
+        // Redirect to all tasks
         this.$router.push({ name: 'tasks-all' })
       } catch (error) {
         console.log(error.response.data)

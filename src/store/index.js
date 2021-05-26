@@ -4,10 +4,14 @@ import auth from '../services/AuthService'
 
 Vue.use(Vuex)
 
+const protocol = window.location.protocol
+const hostname = window.location.hostname
+const port = 3000
+
 export default new Vuex.Store({
   state: {
     isLoggedIn: false,
-    apiUrl: 'http://localhost:3000/api',
+    apiUrl: protocol + '//' + hostname + ':' + port + '/api',
     username: null,
     userId: null
   },

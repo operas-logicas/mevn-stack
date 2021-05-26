@@ -10,7 +10,7 @@ class TaskController {
     try {
       const tasks = await Task
         .find()
-        .sort('-updatedAt')
+        .sort('dueDate title')
         .populate('author', 'username')
         .select('-__v')
 

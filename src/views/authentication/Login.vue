@@ -8,6 +8,8 @@
         <input
           type="text"
           class="form-control"
+          id="username"
+          name="username"
           v-model="username"
         >
       </div>
@@ -17,6 +19,8 @@
         <input
           type="password"
           class="form-control"
+          id="password"
+          name="password"
           v-model="password"
         >
       </div>
@@ -41,20 +45,20 @@ export default {
 
   methods: {
     async onSubmit() {
-      try {
-        const user = {
-          username: this.username,
-          password: this.password
-        }
-
-        // Login user
-        await auth.login(user)
-      } catch (error) {
-        console.log(error)
+      const user = {
+        username: this.username,
+        password: this.password
       }
 
-      // Redirect to home
-      this.$router.push({ name: 'home' })
+      try {
+        // Login user
+        await auth.login(user)
+
+        // Redirect to home
+        this.$router.push({ name: 'home' })
+      } catch (error) {
+        console.log(error.response.data)
+      }
     }
   }
 }

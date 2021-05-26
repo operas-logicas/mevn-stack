@@ -1,7 +1,8 @@
+const moment = require('moment')
 const Task = require('../models/Task')
 const User = require('../models/User')
+const { getUserId } = require('../services/AuthService')
 const taskShowResource = require('../resources/taskShowResource')
-const moment = require('moment')
 
 class TaskController {
   // Find all tasks
@@ -38,8 +39,7 @@ class TaskController {
 
   // Create new task
   async store(req, res) {
-    // TODO: JWT to get userId
-    const userId = '60a80373d60f43beb6fd0c39'
+    const userId = getUserId(req)
 
     try {
       const user = await User.findById(userId)
@@ -59,8 +59,7 @@ class TaskController {
 
   // Update task
   async update(req, res) {
-    // TODO: JWT to get userId and check if authorized
-    const userId = '60a80373d60f43beb6fd0c39'
+    const userId = getUserId(req)
 
     try {
       const user = await User.findById(userId)
@@ -72,11 +71,11 @@ class TaskController {
       if (task.author._id.toString() !== userId)
         return res.status(403).json({ error: 'Not authorized!' })
 
-      task.dueDate = moment(req.body.task.dueDate)
+      req.body.task.dueDate = moment(req.body.task.dueDate)
 
       const updatedTask = await Task.findByIdAndUpdate(
         req.params.id,
-        task,
+        req.body.task,
         { new: true }
       )
       return res.status(201).json(taskShowResource(updatedTask, user))
@@ -88,8 +87,7 @@ class TaskController {
 
   // Delete task
   async remove(req, res) {
-    // TODO: JWT to get userId and check if authorized
-    const userId = '60a80373d60f43beb6fd0c39'
+    const userId = getUserId(req)
 
     try {
       const user = await User.findById(userId)

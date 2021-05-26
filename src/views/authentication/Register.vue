@@ -8,6 +8,8 @@
         <input
           type="text"
           class="form-control"
+          id="firstName"
+          name="firstName"
           v-model="firstName"
         >
       </div>
@@ -17,6 +19,8 @@
         <input
           type="text"
           class="form-control"
+          id="lastName"
+          name="lastName"
           v-model="lastName"
         >
       </div>
@@ -26,6 +30,8 @@
         <input
           type="text"
           class="form-control"
+          id="username"
+          name="username"
           v-model="username"
         >
       </div>
@@ -35,6 +41,8 @@
         <input
           type="password"
           class="form-control"
+          id="password"
+          name="password"
           v-model="password"
         >
       </div>
@@ -81,7 +89,7 @@ export default {
         // Redirect to home
         this.$router.push({ name: 'home' })
       } catch (error) {
-        console.log(error)
+        console.log(error.response.data)
       }
     }
   }

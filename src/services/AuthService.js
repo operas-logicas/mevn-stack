@@ -38,12 +38,8 @@ class AuthService {
   }
   
   async login(user) {
-    try {
-      const token = (await http().post('/auth', user)).data.token
-      this._setToken(token)
-    } catch (error) {
-      console.log(error)
-    }
+    const token = (await http().post('/auth', user)).data.token
+    this._setToken(token)
   }
 
   async logout() {
@@ -51,12 +47,8 @@ class AuthService {
     await store.dispatch('authenticate')
   }
 
-  async register(user) {
-    try {
-      return await http().post('/register', user)
-    } catch (error) {
-      console.log(error)
-    }
+  register(user) {
+      return http().post('/register', user)
   }
 }
 

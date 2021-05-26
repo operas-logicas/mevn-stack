@@ -6,7 +6,7 @@ class RegisterController {
   async register(req, res) {
     const validation = User.validateRequest(req.body)
     if (!validation.isValid)
-      return res.status(400).json({ error: validation.message })
+      return res.status(400).json({ error: validation.error })
       
     try {
       const user = new User({

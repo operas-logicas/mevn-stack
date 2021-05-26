@@ -55,7 +55,7 @@ userSchema.statics.validateRequest =
 
     return {
       isValid: StringUtil.isEmpty(errors),
-      message: errors
+      error: errors
     }
 }
 

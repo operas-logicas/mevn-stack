@@ -7,7 +7,7 @@ class AuthController {
     // Request validation
     const validation = User.validateRequest(req.body, false)
     if (!validation.isValid)
-      return res.status(400).json({ message: validation.message })
+      return res.status(400).json({ error: validation.error })
   
     // User validation
     const user = await User.findOne({

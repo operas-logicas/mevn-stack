@@ -3,14 +3,6 @@ const mongoose = require('mongoose')
 const StringUtil = require('../utilities/StringUtil')
 
 const userSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    required: true,
-    minLength: 5,
-    maxLength: 50,
-    unique: true
-  },
-
   firstName: {
     type: String,
     required: true,
@@ -23,6 +15,14 @@ const userSchema = new mongoose.Schema({
     required: true,
     minLength: 3,
     maxLength: 100
+  },
+
+  username: {
+    type: String,
+    required: true,
+    minLength: 5,
+    maxLength: 50,
+    unique: true
   },
 
   password: {
@@ -39,12 +39,6 @@ userSchema.statics.validateRequest =
   (body, register = true) => {
     let errors = ''
 
-    if (StringUtil.isEmpty(body.username))
-      errors += 'Username is required. '
-
-    if (StringUtil.isEmpty(body.password))
-      errors += 'Password is required. '
-
     if (register) {
       if (StringUtil.isEmpty(body.firstName))
         errors += 'First name is required. '
@@ -52,6 +46,12 @@ userSchema.statics.validateRequest =
       if (StringUtil.isEmpty(body.lastName))
         errors += 'Last name is required. '
     }
+
+    if (StringUtil.isEmpty(body.username))
+      errors += 'Username is required. '
+
+    if (StringUtil.isEmpty(body.password))
+      errors += 'Password is required. '
 
     return {
       isValid: StringUtil.isEmpty(errors),
@@ -65,9 +65,9 @@ userSchema.statics.validatePassword = (plain, hashed) => {
 }
 
 userSchema.pre('save', async function(next) {
-  this.username = this.username.toLowerCase()
   this.firstName = this.firstName.toLowerCase()
   this.lastName = this.lastName.toLowerCase()
+  this.username = this.username.toLowerCase()
   
   // Hash password
   const salt = await bcrypt.genSalt()

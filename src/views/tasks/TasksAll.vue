@@ -1,5 +1,7 @@
 <template>
   <div class="d-flex flex-column">
+    <Error v-if="errors">{{ errors.error }}</Error>
+
     <h1>Tasks</h1>
 
     <div class="mb-4">
@@ -92,15 +94,21 @@
 
 <script>
 import moment from 'moment'
+import Error from '../../components/Error'
 import taskService from '../../services/TaskService'
 
 export default {
   name: 'TasksAll',
 
+  components: {
+    Error
+  },
+
   data() {
     return {
       tasks: null,
-      currentTaskId: null
+      currentTaskId: null,
+      errors: null
     }
   },
 
@@ -111,6 +119,7 @@ export default {
     },
 
     async deleteTask() {
+      this.errors = null
       this.$refs['modal'].hide()
 
       try {
@@ -123,7 +132,7 @@ export default {
 
         this.currentTaskId = null
       } catch (error) {
-        console.log(error.response.data)
+        this.errors = error.response.data
       }
     },
 
@@ -132,12 +141,13 @@ export default {
     },
 
     async markAsCompleted(task) {
+      this.errors = null
       task.completed = true
 
       try {
         await taskService.updateTask(task._id, { task })
       } catch (error) {
-        console.log(error.response.data)
+        this.errors = error.response.data
       }
     },
 
@@ -151,7 +161,7 @@ export default {
       const response = await taskService.getAllTasks()
       next(vm => vm.tasks = response.data.tasks)
     } catch (error) {
-      console.log(error.response.data)
+      this.errors = error.response.data
     }
   }
 }

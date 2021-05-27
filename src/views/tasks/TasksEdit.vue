@@ -1,5 +1,7 @@
 <template>
   <div>
+    <Error v-if="errors">{{ errors.error }}</Error>
+
     <h1>Edit Task</h1>
 
     <form class="custom-form" @submit.prevent="onSubmit">
@@ -43,10 +45,15 @@
 
 <script>
 import moment from 'moment'
+import Error from '../../components/Error'
 import taskService from '../../services/TaskService'
 
 export default {
   name: 'TasksEdit',
+
+  components: {
+    Error
+  },
 
   data() {
     return {
@@ -54,12 +61,15 @@ export default {
         title: null,
         body: null,
         dueDate: null
-      }
+      },
+      errors: null
     }
   },
 
   methods: {
     async onSubmit() {
+      this.errors = null
+
       try {
         // Update task
         await taskService.updateTask(this.task._id, { task: this.task })
@@ -67,7 +77,7 @@ export default {
         // Redirect to all tasks
         this.$router.push({ name: 'tasks-all' })
       } catch (error) {
-        console.log(error.response.data)
+        this.errors = error.response.data
       }
     }
   },
@@ -78,7 +88,7 @@ export default {
       task.dueDate = moment(task.dueDate).format('YYYY-MM-DD')
       next(vm => vm.task = task)
     } catch (error) {
-      console.log(error.response.data)
+      this.errors = error.response.data
     }
   }
 }

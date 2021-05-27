@@ -1,5 +1,7 @@
 <template>
   <div>
+    <Error v-if="errors">{{ errors.error }}</Error>
+
     <h1>Register</h1>
 
     <form class="custom-form" @submit.prevent="onSubmit">
@@ -54,21 +56,29 @@
 
 <script>
 import auth from '../../services/AuthService'
+import Error from '../../components/Error'
 
 export default {
   name: 'Register',
+
+  components: {
+    Error
+  },
 
   data() {
     return {
       username: null,
       firstName: null,
       lastName: null,
-      password: null
+      password: null,
+      errors: null
     }
   },
 
   methods: {
     async onSubmit() {
+      this.errors = null
+
       const user = {
         username: this.username,
         firstName: this.firstName,
@@ -89,7 +99,7 @@ export default {
         // Redirect to home
         this.$router.push({ name: 'home' })
       } catch (error) {
-        console.log(error.response.data)
+        this.errors = error.response.data
       }
     }
   }

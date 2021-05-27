@@ -45,6 +45,10 @@ class TaskController {
       const user = await User.findById(userId)
       if (!user) return res.status(400).json({ error: 'Invalid user!' })
 
+      const validation = Task.validateRequest(req.body.task)
+      if (!validation.isValid)
+        return res.status(400).json({ error: validation.error })
+
       const task = new Task(req.body.task)
       task.author = user._id
       task.dueDate = moment(task.dueDate)
@@ -53,7 +57,10 @@ class TaskController {
       return res.status(201).json(taskShowResource(task, user))
 
     } catch (error) {
-      return res.status(400).json({ error: error.message })
+      const errors = [];
+      for (const field in error.errors)
+        errors.push(error.errors[field].message);
+      return res.status(400).json({ error: errors.join(' ') })
     }
   }
 
@@ -71,17 +78,25 @@ class TaskController {
       if (task.author._id.toString() !== userId)
         return res.status(403).json({ error: 'Not authorized!' })
 
+      const validation = Task.validateRequest(req.body.task)
+      if (!validation.isValid)
+        return res.status(400).json({ error: validation.error })
+
       req.body.task.dueDate = moment(req.body.task.dueDate)
 
       const updatedTask = await Task.findByIdAndUpdate(
         req.params.id,
         req.body.task,
-        { new: true }
+        { runValidators: true, new: true }
       )
+
       return res.status(201).json(taskShowResource(updatedTask, user))
 
     } catch (error) {
-      return res.status(400).json({ error: error.message })
+      const errors = [];
+      for (const field in error.errors)
+        errors.push(error.errors[field].message);
+      return res.status(400).json({ error: errors.join(' ') })
     }
   }
 

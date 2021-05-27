@@ -10,9 +10,9 @@ class RegisterController {
       
     try {
       const user = new User({
-        username: req.body.username,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
+        username: req.body.username,
         password: req.body.password
       })
   
@@ -23,8 +23,10 @@ class RegisterController {
       if (error.code === 11000)
         return res.status(400).json({ error: 'Username already taken!' })
       
-      console.log(error.message)
-      return res.status(500).json('Something went wrong!')
+      const errors = [];
+      for (const field in error.errors)
+        errors.push(error.errors[field].message)
+      return res.status(400).json({ error: errors.join(' ') })
     }
   }
 }

@@ -1,5 +1,5 @@
 const User = require('../models/User')
-const { generateJWT } = require('../services/authService')
+const { generateJWT } = require('../services/AuthService')
 
 class AuthController {  
   // Login new user

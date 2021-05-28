@@ -60,7 +60,7 @@ export default {
       task: {
         title: null,
         body: null,
-        dueDate: moment().format('YYYY-MM-DD')
+        dueDate: moment.utc().format('YYYY-MM-DD')
       },
       errors: null
     }

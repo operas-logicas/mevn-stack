@@ -14,7 +14,10 @@ Vue.config.productionTip = process.env.NODE_ENV === 'production'
 
 Vue.use(BootstrapVue)
 
-Vue.filter('makeItNice', date => moment(date).format('MMM DD, YYYY'))
+Vue.filter(
+  'makeItNice',
+  date => moment.utc(date).format('MMM DD, YYYY')
+)
 
 new Vue({
   router,

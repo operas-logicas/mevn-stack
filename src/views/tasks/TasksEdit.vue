@@ -85,7 +85,7 @@ export default {
   async beforeRouteEnter(to, from, next) {
     try {
       const task = (await taskService.getTaskById(to.params.id)).data.task
-      task.dueDate = moment(task.dueDate).format('YYYY-MM-DD')
+      task.dueDate = moment.utc(task.dueDate).format('YYYY-MM-DD')
       next(vm => vm.task = task)
     } catch (error) {
       this.errors = error.response.data

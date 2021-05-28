@@ -10,7 +10,7 @@ class TaskController {
     try {
       const tasks = await Task
         .find()
-        .sort('dueDate title')
+        .sort('dueDate')
         .populate('author', 'username')
         .select('-__v')
 
@@ -51,7 +51,9 @@ class TaskController {
 
       const task = new Task(req.body.task)
       task.author = user._id
-      task.dueDate = moment(task.dueDate)
+
+      if (task.dueDate) task.dueDate = moment.utc(task.dueDate).toDate()
+      else task.dueDate = moment.utc().toDate()
 
       await task.save()
       return res.status(201).json(taskShowResource(task, user))
@@ -82,7 +84,9 @@ class TaskController {
       if (!validation.isValid)
         return res.status(400).json({ error: validation.error })
 
-      req.body.task.dueDate = moment(req.body.task.dueDate)
+      if (req.body.task.dueDate)
+        req.body.task.dueDate = moment.utc(req.body.task.dueDate).toDate()
+      else req.body.task.dueDate = moment.utc().toDate()
 
       const updatedTask = await Task.findByIdAndUpdate(
         req.params.id,

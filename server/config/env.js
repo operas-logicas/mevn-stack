@@ -1,5 +1,6 @@
 const cors = require('cors')
 const express = require('express')
+const helmet = require('helmet')
 const morgan = require('morgan')
 
 function setDevEnv(app) {
@@ -29,6 +30,7 @@ function setProdEnv(app) {
   // Register middleware
   app.use(express.json())
   app.use(express.static(__dirname + '/../../dist/'))
+  app.use(helmet())
 }
 
 module.exports = function(app) {

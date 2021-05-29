@@ -1,6 +1,7 @@
 const cors = require('cors')
 const express = require('express')
 const helmet = require('helmet')
+const history = require('connect-history-api-fallback')
 const morgan = require('morgan')
 
 function setDevEnv(app) {
@@ -29,6 +30,7 @@ function setProdEnv(app) {
 
   // Register middleware
   app.use(express.json())
+  app.use(history())
   app.use(express.static(__dirname + '/../../dist/'))
   app.use(helmet())
 }

@@ -88,16 +88,18 @@ export default {
 
       try {
         // Register new user
-        const newUser = await auth.register(user)
+        const response = await auth.register(user)
 
-        // Login new user
-        await auth.login({
-          username: newUser.username,
-          password: newUser.password
-        })
+        if (response.status === 201) {
+          // Login new user
+          await auth.login({
+            username: user.username,
+            password: user.password
+          })
 
-        // Redirect to home
-        this.$router.push({ name: 'home' })
+          // Redirect to home
+          this.$router.push({ name: 'home' })
+        }
       } catch (error) {
         this.errors = error.response.data
       }
